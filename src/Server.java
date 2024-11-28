@@ -7,25 +7,25 @@ public class Server {
             System.out.println("Server is working");
 
             while (true) {
-                try (Socket socket = serverSocket.accept();
-                     ObjectInputStream input = new ObjectInputStream(socket.getInputStream());
-                     ObjectOutputStream output = new ObjectOutputStream(socket.getOutputStream())) {
+                try (Socket s = serverSocket.accept();
+                     ObjectInputStream in = new ObjectInputStream(s.getInputStream());
+                     ObjectOutputStream out = new ObjectOutputStream(s.getOutputStream())) {
 
-                    Object reply = input.readObject();
+                    Object reply = in.readObject();
                     if (reply.equals("Q")) {
-                        System.out.println("Client wants to quit");
+                        System.out.println("Exit");
                         break;
                     }
 
                     if (reply instanceof Main) {
-                        Main main = (Main) reply;
-                        double area = main.calculateArea();
-                        output.writeObject("Area: " + area);
+                        Main data = (Main) reply;
+                        double area = data.calculateArea();
+                        out.writeObject("Area: " + area);
                     }
                 }
             }
-        } catch (Exception e) {
-            e.printStackTrace();
+        } catch (Exception a) {
+            a.printStackTrace();
         }
     }
 }
