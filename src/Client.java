@@ -4,43 +4,44 @@ import java.util.Scanner;
 
 public class Client {
     public static void main(String[] args) {
-        try (Socket socket = new Socket("localhost", 1111);
-             ObjectOutputStream output = new ObjectOutputStream(socket.getOutputStream());
-             ObjectInputStream input = new ObjectInputStream(socket.getInputStream());
+        try (Socket s = new Socket("localhost", 1111);
+             ObjectOutputStream out = new ObjectOutputStream(s.getOutputStream());
+             ObjectInputStream in = new ObjectInputStream(s.getInputStream());
              Scanner scanner = new Scanner(System.in)) {
 
             while (true) {
-                System.out.println("Enter shape like Circle, Rectangle, or Q to quit");
-                String choice = scanner.nextLine();
+                System.out.println("Shape Circle Rectangle or Q:");
+                String a = scanner.nextLine();
 
-                if (choice.equalsIgnoreCase("Q")) {
-                    output.writeObject("Q");
+                if (a.equalsIgnoreCase("Q")) {
+                    out.writeObject("Q");
                     break;
                 }
 
-                Main main = null;
-                if (choice.equalsIgnoreCase("Circle")) {
-                    System.out.print("Enter radius: ");
+
+                Main data = null;
+                if (a.equalsIgnoreCase("Circle")) {
+                    System.out.print("Radius: ");
                     double radius = scanner.nextDouble();
-                    main = new Circle(radius);
-                } else if (choice.equalsIgnoreCase("Rectangle")) {
-                    System.out.print("Enter width: ");
+                    data = new Circle(radius);
+                } else if (a.equalsIgnoreCase("Rectangle")) {
+                    System.out.print("Width: ");
                     double width = scanner.nextDouble();
-                    System.out.print("Enter height: ");
+                    System.out.print("Height: ");
                     double height = scanner.nextDouble();
-                    main = new Rectangle(width, height);
+                    data = new Rectangle(width, height);
                 } else {
                     System.out.println("Error");
                     continue;
                 }
 
                 scanner.nextLine();
-                output.writeObject(main);
-                String response = (String) input.readObject();
-                System.out.println(response);
+                out.writeObject(data);
+                String reply = (String) in.readObject();
+                System.out.println(reply);
             }
-        } catch (Exception e) {
-            e.printStackTrace();
+        } catch (Exception a) {
+            a.printStackTrace();
         }
     }
 }
